@@ -1,2 +1,7 @@
 Python-Todos Setuping:
 ✔ lege eine Todo-Liste an @done(2016-09-26 21:38)
+
+Python-Code-caesar.py:
+☐ docstrings hinzufügen
+✔ analyseCeasar fertigstellen @done(2016-09-29 01:49)
+☐ caesar bissl zusammenfassen -> eine Funktion, Parameter bestimmt was sie tut
