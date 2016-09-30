@@ -1,7 +1,12 @@
 Python-Todos Setuping:
 ✔ lege eine Todo-Liste an @done(2016-09-26 21:38)
 
-Python-Code-caesar.py:
+Python-Code-caesar:
 ☐ docstrings hinzufügen
 ✔ analyseCeasar fertigstellen @done(2016-09-29 01:49)
-☐ caesar bissl zusammenfassen -> eine Funktion, Parameter bestimmt was sie tut
+✔ caesar bissl zusammenfassen -> eine Funktion, Parameter bestimmt was sie tut @done(2016-09-30 02:08)
+☐ das Leerzeichen ist häufiger als das e, stelle das dahingehend um
+
+Python-Code-permutation:
+☐ docstrings hinzufügen
+☐ weitere algorithmen um das ergebnis zu verbessern, challenge kuerzerer text

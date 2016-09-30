@@ -27,16 +27,32 @@ def analyseCaesar(chiffretext):
     return shift
 
 
-def encryptCaesar(klartext, shift):
-    klartextListe = list(klartext)
+def caesar(text, modus='decrypt', shift=None):
+    if modus == 'encrypt':
+        if shift is None:
+            print('Kein Shift angegeben, bitte erneut versuchen!')
+        else:
+            return encryptCaesar(text, shift)
+    if modus == 'decrypt':
+        if shift is None:
+            shift = analyseCaesar(text)
+            return decryptCaesar(text, shift)
+        else:
+            return decryptCaesar(text, shift)
+
+
+def encryptCaesar(text, shift=None):
+    textListe = list(text)
     i = 0
-    for buchstabe in klartextListe:
-        ausgangsbuchstabenindex = standardalphabetSimple.index(buchstabe)
-        klartextListe[i] = standardalphabetSimple[
-                                   (ausgangsbuchstabenindex + shift) % 27]
+    for buchstabe in textListe:
+        ausgangsbuchstabenindex = standardalphabetSimple.index(
+            buchstabe
+        )
+        textListe[i] = standardalphabetSimple[
+            (ausgangsbuchstabenindex + shift) % 27
+        ]
         i = i + 1
-    print(''.join(klartextListe))
-    return ''.join(klartextListe)
+    return ''.join(textListe)
 
 
 def decryptCaesar(chiffretext, shift):
@@ -45,7 +61,6 @@ def decryptCaesar(chiffretext, shift):
     for buchstabe in chiffretextListe:
         ausgangsbuchstabenindex = standardalphabetSimple.index(buchstabe)
         chiffretextListe[i] = standardalphabetSimple[
-                                   (ausgangsbuchstabenindex - shift) % 27]
+                              (ausgangsbuchstabenindex - shift) % 27]
         i = i + 1
-    print(''.join(chiffretextListe))
     return ''.join(chiffretextListe)
