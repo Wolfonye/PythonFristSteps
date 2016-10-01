@@ -57,11 +57,36 @@ def analysePerm(chiffretext):
     return chiffreRanking
 
 
-def decryptPerm(chiffretext):
-    chiffreRanking = analysePerm(chiffretext)
+def swapRanking(rankingListe, buchstabeEins, buchstabeZwei):
+    indexBuchstabeEins = rankingListe.index(buchstabeEins)
+    indexBuchstabeZwei = rankingListe.index(buchstabeZwei)
+    swappy = rankingListe[indexBuchstabeEins]
+    rankingListe[indexBuchstabeEins] = buchstabeZwei
+    rankingListe[indexBuchstabeZwei] = swappy
+
+
+def decryptPerm(chiffretext, chiffreRanking=None):
+    if chiffreRanking is None:
+        chiffreRanking = analysePerm(chiffretext)
     chiffretextListe = list(chiffretext)
     for i in range(len(chiffretextListe)):
         buchstabe = chiffretextListe[i]
         chiffreRankingIndex = chiffreRanking.index(buchstabe)
         chiffretextListe[i] = ranking[chiffreRankingIndex]
-    return ''.join(chiffretextListe)
+    print(''.join(chiffretextListe))
+    while True:
+        userInput = input("Sieht das Ergebnis sinnvoll aus? j/n")
+        if userInput == "j":
+            print("Super, das ist töfte!")
+            return
+        if userInput == "n":
+            print("Wie wollen sie weiter vorgehen?")
+            print("Ich möchte:")
+            print("- einen Buchstaben durch einen anderen ersetzen(1)")
+            print("- dass du mir einen neuen Vorschlag machst(2)")
+            print("- aufgeben und Schande über mich bringen(3)")
+        userInput = input("Nummer der Option meiner Wahl: ")
+        if userInput == "1":
+            buchstabeEins = input("Welchen Buchstaben möchtest du ersetzen?")
+            buchstabeZwei = input("Welcher Buchstabe soll ihn ersetzen?")
+            swapRanking(chiffreRanking, buchstabeEins, buchstabeZwei)
