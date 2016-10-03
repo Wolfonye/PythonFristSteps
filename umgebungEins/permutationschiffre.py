@@ -1,4 +1,5 @@
 from random import shuffle
+from copy import deepcopy
 alphabet = {' ': 0, 'a': 1, 'b': 2, 'c': 3,
             'd': 4, 'e': 5, 'f': 6, 'g': 7,
             'h': 8, 'i': 9, 'j': 10, 'k': 11,
@@ -24,21 +25,26 @@ def permutiereAlphabet():
     return permutationsAlphabet
 
 
-def encryptPerm(klartext):
-    permutationsAlphabet = permutiereAlphabet()
-    klartextListe = list(klartext)
-    for i in range(len(klartextListe)):
-        buchstabe = klartextListe[i]
-        permutationsIndex = alphabet[buchstabe]
-        klartextListe[i] = permutationsAlphabet[permutationsIndex]
-    return ''.join(klartextListe)
-
-
 def findeMaxValueKey(woerterbuch):
     # fuer die wiederholte Anwendung ineffizient, aber fuer kleine Beispiele ok
     werte = list(woerterbuch.values())
     schluessel = list(woerterbuch.keys())
     return schluessel[werte.index(max(werte))]
+
+
+def findeValueKey(woerterbuch, wert):
+    werte = list(woerterbuch.values())
+    schluessel = list(woerterbuch.keys())
+    return schluessel[werte.index(wert)]
+
+
+def swapRanking(rankingListe, buchstabeEins, buchstabeZwei):
+    indexBuchstabeEins = rankingListe.index(buchstabeEins)
+    indexBuchstabeZwei = rankingListe.index(buchstabeZwei)
+    swappy = rankingListe[indexBuchstabeEins]
+    rankingListe[indexBuchstabeEins] = buchstabeZwei
+    rankingListe[indexBuchstabeZwei] = swappy
+    return rankingListe
 
 
 def analysePerm(chiffretext):
@@ -57,36 +63,67 @@ def analysePerm(chiffretext):
     return chiffreRanking
 
 
-def swapRanking(rankingListe, buchstabeEins, buchstabeZwei):
-    indexBuchstabeEins = rankingListe.index(buchstabeEins)
-    indexBuchstabeZwei = rankingListe.index(buchstabeZwei)
-    swappy = rankingListe[indexBuchstabeEins]
-    rankingListe[indexBuchstabeEins] = buchstabeZwei
-    rankingListe[indexBuchstabeZwei] = swappy
+def encryptPerm(klartext):
+    permutationsAlphabet = permutiereAlphabet()
+    klartextListe = list(klartext)
+    for i in range(len(klartextListe)):
+        buchstabe = klartextListe[i]
+        permutationsIndex = alphabet[buchstabe]
+        klartextListe[i] = permutationsAlphabet[permutationsIndex]
+    return ''.join(klartextListe), permutationsAlphabet
+
+
+def berechneSchluesselAlphabet(chiffreRanking):
+    schluesselAlphabetKandidat = {}
+    for i in range(len(ranking)):
+        schluesselAlphabetKandidat[chiffreRanking[i]] = ranking[i]
+    return schluesselAlphabetKandidat
+
+
+def simpleDecryptPerm(chiffretext, schluessel):
+    # Idee: stelle Gegenüberstellungsdictionary 'schluesselAlphabet' her und
+    # ersetze dementsprechend
+    chiffretextListe = list(chiffretext)
+    schluesselAlphabet = deepcopy(alphabet)
+    for i in range(27):
+        tempIndex = findeValueKey(schluesselAlphabet, i)
+        schluesselAlphabet[tempIndex] = schluessel[i]
+    # das schluesselAlphabet muss noch "gedreht" werden sonst mappen wir
+    # in die falsche Richtung, das passiert in der nächsten Zeile
+    schluesselAlphabet = {v: k for k, v in schluesselAlphabet.items()}
+    tempIndex = 0
+    for i in chiffretextListe:
+        chiffretextListe[tempIndex] = schluesselAlphabet[i]
+        tempIndex = tempIndex + 1
+    print(''.join(chiffretextListe))
+    return ''.join(chiffretextListe)
 
 
 def decryptPerm(chiffretext, chiffreRanking=None):
     if chiffreRanking is None:
         chiffreRanking = analysePerm(chiffretext)
-    chiffretextListe = list(chiffretext)
-    for i in range(len(chiffretextListe)):
-        buchstabe = chiffretextListe[i]
-        chiffreRankingIndex = chiffreRanking.index(buchstabe)
-        chiffretextListe[i] = ranking[chiffreRankingIndex]
-    print(''.join(chiffretextListe))
+        # print(ranking)
     while True:
-        userInput = input("Sieht das Ergebnis sinnvoll aus? j/n")
+        schluesselAlphabet = berechneSchluesselAlphabet(chiffreRanking)
+        chiffretextListe = list(chiffretext)
+        tempIndex = 0
+        for i in chiffretextListe:
+            chiffretextListe[tempIndex] = schluesselAlphabet[i]
+            tempIndex = tempIndex + 1
+        print(''.join(chiffretextListe))
+        userInput = input("Sieht das Ergebnis sinnvoll aus? j/n ")
         if userInput == "j":
             print("Super, das ist töfte!")
             return
         if userInput == "n":
-            print("Wie wollen sie weiter vorgehen?")
+            print("Wie willst du weiter vorgehen?")
             print("Ich möchte:")
             print("- einen Buchstaben durch einen anderen ersetzen(1)")
             print("- dass du mir einen neuen Vorschlag machst(2)")
             print("- aufgeben und Schande über mich bringen(3)")
         userInput = input("Nummer der Option meiner Wahl: ")
         if userInput == "1":
-            buchstabeEins = input("Welchen Buchstaben möchtest du ersetzen?")
-            buchstabeZwei = input("Welcher Buchstabe soll ihn ersetzen?")
+            buchstabeEins = input("Welchen Buchstaben möchtest du ersetzen? ")
+            buchstabeZwei = input("Welcher Buchstabe soll ihn ersetzen? ")
             swapRanking(chiffreRanking, buchstabeEins, buchstabeZwei)
+            print(ranking)

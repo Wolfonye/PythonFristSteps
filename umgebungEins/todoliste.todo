@@ -10,3 +10,5 @@ Python-Code-caesar:
 Python-Code-permutation:
 ☐ docstrings hinzufügen
 ☐ weitere algorithmen um das ergebnis zu verbessern, challenge kuerzerer text
+✔ Schlüsselkandidatberechnung auf Basis von chiffreRanking hinzufügen (switch nötig?) @done(2016-10-03 23:05)
+☐ swapping funktioniert nicht, korrigier das
